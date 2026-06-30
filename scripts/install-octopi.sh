@@ -70,7 +70,7 @@ EOF
 # Step 5: Start host software
 start_software()
 {
-    report_status "Launching Klipper host software..."
+    report_status "Welcome! IDOLABS fork of Klipper has been installed."
     sudo /etc/init.d/klipper restart
 }
 
@@ -83,7 +83,7 @@ report_status()
 verify_ready()
 {
     if [ "$EUID" -eq 0 ]; then
-        echo "This script must not run as root"
+        echo "The Octopus doesn't like the ROOT... Bring your user account instead."
         exit -1
     fi
 }
@@ -101,3 +101,4 @@ create_virtualenv
 install_script
 install_config
 start_software
+report_status "Happy printing!"
