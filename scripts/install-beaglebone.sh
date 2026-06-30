@@ -60,7 +60,7 @@ report_status()
 verify_ready()
 {
     if [ "$EUID" -eq 0 ]; then
-        echo "This script must not run as root"
+        echo "Your Beaglebone does NOT like roots on sudo. Come back with your user account."
         exit -1
     fi
 }
@@ -77,4 +77,6 @@ install_main
 install_packages
 install_script
 install_udev
-install_groups
+install_groups    
+report_status "Welcome! IDOLABS fork of Klipper has been installed."
+report_status "Happy printing!"
