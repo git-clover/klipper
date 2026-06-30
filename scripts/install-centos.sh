@@ -53,6 +53,7 @@ WantedBy=multi-user.target
 
 [Service]
 Type=simple
+Nice=-15
 User=$USER
 RemainAfterExit=yes
 ExecStart=${PYTHONDIR}/bin/python ${SRCDIR}/klippy/klippy.py ${HOME}/printer.cfg -l /var/log/klippy.log
@@ -69,7 +70,7 @@ KLIPPY_USER=$USER
 # Step 5: Start host software
 start_software()
 {
-    report_status "Launching Klipper host software..."
+    report_status "Welcome! IDOLABS fork of Klipper has been installed."
     sudo systemctl restart klipper
 }
 
@@ -82,7 +83,7 @@ report_status()
 verify_ready()
 {
     if [ "$EUID" -eq 0 ]; then
-        echo "This script must not run as root"
+        echo "We don't accept root. Use your user account."
         exit -1
     fi
 }
@@ -99,3 +100,4 @@ install_packages
 create_virtualenv
 install_script
 start_software
+report_status "Happy printing!"
