@@ -141,12 +141,12 @@ class GCodeDispatch:
             return old_cmd
         if cmd in self.ready_gcode_handlers:
             raise self.printer.config_error(
-                "gcode command %s already registered" % (cmd,))
+                "You defined '%s' multiple times! Good luck finding it!" % (cmd,))
         if not self.is_traditional_gcode(cmd):
             if (cmd.upper() != cmd or not cmd.replace('_', 'A').isalnum()
                 or cmd[0].isdigit() or cmd[1:2].isdigit()):
                 raise self.printer.config_error(
-                    "Can't register '%s' as it is an invalid name" % (cmd,))
+                    "Macro '%s' conflicts with naming rules! See documentation for help" % (cmd,))
             origfunc = func
             func = lambda params: origfunc(self._get_extended_params(params))
         self.ready_gcode_handlers[cmd] = func
@@ -313,7 +313,7 @@ class GCodeDispatch:
                 not gcmd.get_float('S', 1.) or self.is_fileinput)):
             # Don't warn about requests to turn off fan when fan not present
             return
-        gcmd.respond_info('Unknown command:"%s"' % (cmd,))
+        gcmd.respond_info("Command '%s' not found" % (cmd,))
     def _cmd_mux(self, command, gcmd):
         key, values = self.mux_commands[command]
         if None in values:
