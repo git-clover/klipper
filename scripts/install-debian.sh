@@ -75,7 +75,7 @@ EOF
 start_software()
 {
     report_status "Welcome! IDOLABS fork of Klipper has been installed."
-a    sudo systemctl start klipper
+    sudo systemctl start klipper
 }
 
 # Helper functions
