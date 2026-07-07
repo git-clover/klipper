@@ -1,6 +1,8 @@
 #Systemd: Klipper-MCU
 #This exposes your Linux host to Klipper as secondary MCU.
 #You have to enable this if you want to integrate system cooling to Klipper.
+#You want to run:
+## sudo cp klipper-mcu.service /etc/systemd/system/klipper-mcu.service
 
 [Unit]
 Description=Exposes the Linux host to Klipper as secondary MCU
