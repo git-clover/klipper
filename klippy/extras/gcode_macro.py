@@ -89,7 +89,7 @@ class PrinterGCodeMacro:
             script = config.get(option, default)
         return TemplateWrapper(self.printer, self.env, name, script)
     def _action_emergency_stop(self, msg="action_emergency_stop"):
-        self.printer.invoke_shutdown("Shutdown due to %s" % (msg,))
+        self.printer.invoke_shutdown("E-STOP active: %s" % (msg,))
         return ""
     def _action_respond_info(self, msg):
         self.printer.lookup_object('gcode').respond_info(msg)
