@@ -16,6 +16,7 @@ class SerialReader:
         self.reactor = reactor
         self.warn_prefix = ""
         self.mcu_name = mcu_name
+        self.wait = 30
         if self.mcu_name:
             self.warn_prefix = "mcu '%s': " % (self.mcu_name)
         sq_name = ("serialq %s" % (self.mcu_name))[:15]
@@ -137,15 +138,15 @@ class SerialReader:
         logging.info("%sStarting CAN connect", self.warn_prefix)
         start_time = self.reactor.monotonic()
         while 1:
-            if self.reactor.monotonic() > start_time + 90.:
-                self._error("Unable to connect")
+            if self.reactor.monotonic() > start_time + self.wait:
+                self._error("Stepped on a CAN'Tbus")
             try:
                 bus = can.interface.Bus(channel=canbus_iface,
                                         can_filters=filters,
                                         bustype='socketcan')
                 bus.send(set_id_msg)
             except (can.CanError, os.error, IOError) as e:
-                logging.warning("%sUnable to open CAN port: %s",
+                logging.warning("%sKlippy died opening a CAN'Tbus port: %s",
                                 self.warn_prefix, e)
                 self.reactor.pause(self.reactor.monotonic() + 5.)
                 continue
@@ -169,12 +170,12 @@ class SerialReader:
         logging.info("%sStarting connect", self.warn_prefix)
         start_time = self.reactor.monotonic()
         while 1:
-            if self.reactor.monotonic() > start_time + 90.:
-                self._error("Unable to connect")
+            if self.reactor.monotonic() > start_time + self.wait:
+                self._error("Connection died faster than Trump's decisions on Iran")
             try:
                 fd = os.open(filename, os.O_RDWR | os.O_NOCTTY)
             except OSError as e:
-                logging.warning("%sUnable to open port: %s",
+                logging.warning("%sSerial port doomed: %s",
                                 self.warn_prefix, e)
                 self.reactor.pause(self.reactor.monotonic() + 5.)
                 continue
@@ -187,8 +188,8 @@ class SerialReader:
         logging.info("%sStarting serial connect", self.warn_prefix)
         start_time = self.reactor.monotonic()
         while 1:
-            if self.reactor.monotonic() > start_time + 67.:
-                self._error("Connection fucked itself to death")
+            if self.reactor.monotonic() > start_time + self.wait:
+                self._error("Connection died faster than Trump's decisions on Iran")
             try:
                 serial_dev = serial.Serial(baudrate=baud, timeout=0,
                                            exclusive=True)
