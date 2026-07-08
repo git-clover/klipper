@@ -1,4 +1,4 @@
-This is your captain speaking... ~~(Or maybe shouting...)~~
+# This is your captain speaking... ~~(Or maybe shouting...)~~
 
 **WELCOME TO MY PLAYGROUND!**
 
@@ -15,3 +15,6 @@ the [documentation](https://www.klipper3d.org/Overview.html).
 
 We depend on the generous support from our
 [sponsors](https://www.klipper3d.org/Sponsors.html), including you.
+
+I fed a lot of steroid on this fork.
+If things go wrong, ask it to eject steroids.
