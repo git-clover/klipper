@@ -6,49 +6,56 @@
 import logging
 
 message_shutdown = """
-Once the underlying issue is corrected, use the
-"FIRMWARE_RESTART" command to reset the firmware, reload the
-config, and restart the host software.
-Printer is shutdown
+After you correct the issue,
+run "FIRMWARE_RESTART" command to nuke all MCUs for a fresh start.
+Printer is shut down.
 """
 
 message_protocol_error1 = """
-This is frequently caused by running an older version of the
-firmware on the MCU(s). Fix by recompiling and flashing the
-firmware.
+Mixed firmware versions very often cause this issue.
+Take your time to flash everything into the newest firmware.
+Good luck!
 """
 
 message_protocol_error2 = """
-Once the underlying issue is corrected, use the "RESTART"
-command to reload the config and restart the host software.
+After you correct the issue,
+run "FIRMWARE_RESTART" command to nuke all MCUs for a fresh start
+or "RESTART" to reset the host only.
 """
 
 message_mcu_connect_error = """
-Once the underlying issue is corrected, use the
-"FIRMWARE_RESTART" command to reset the firmware, reload the
-config, and restart the host software.
-Error configuring printer
+After you correct the issue,
+run "RESTART" to apply new code faster.
 """
 
 Common_MCU_errors = {
-    ("Timer too close",): """
-This often indicates the host computer is overloaded. Check
-for other processes consuming excessive CPU time, high swap
-usage, disk errors, overheating, unstable voltage, or
-similar system problems on the host computer.""",
+    ("Timer too close for execution",): """
+This happens when your host is a piece of potato 
+or some software is actively trying to eat too much resource.
+Hot hosts want to go to motels, not print your stuff.
+Maybe also check the supply voltage for unstable power as well.
+You don't want to do calculus while carrying a bag and running a Marathon.
+""",
     ("Missed scheduling of next ",): """
-This is generally indicative of an intermittent
-communication failure between micro-controller and host.""",
-    ("ADC out of range",): """
-This generally occurs when a heater temperature exceeds
-its configured min_temp or max_temp.""",
-    ("Rescheduled timer in the past", "Stepper too far in past"): """
-This generally occurs when the micro-controller has been
-requested to step at a rate higher than it is capable of
-obtaining.""",
+When this happens, something serious is also happening between the host and the MCU.
+If you haven't maintained this connection regularly, check the cables.
+""",
+    ("ADC had too much steroid",): """
+Turn off your printer and check your heater RIGHT NOW.
+It might be experiencing a serious runaway.
+If you haven't maintained it regularly, take it out to inspect it.
+You might also want to check the config for proper thermistors.
+""",
+    ("Timer in the past", "Motor ran out of time"): """
+Your MCU is overworking.
+Did you set the velocity to something else? Check it again.
+Did you tweak your microsteps? Lower it.
+It's often good to search your MCU's performance for good measure.
+""",
     ("Command request",): """
-This generally occurs in response to an M112 G-Code command
-or in response to an internal error in the host software.""",
+M112 command has been triggered somewhere.
+This is mostly caused by safety mechanisms, slicer configs, or even your macros.
+""",
 }
 
 def error_hint(msg):
@@ -107,20 +114,20 @@ class PrinterMCUError:
                 logging.exception("Unable to retrieve mcu_version from mcu")
                 continue
             if mcu_version != host_version:
-                msg_update.append("%s: Current version %s"
+                msg_update.append("%s: %s"
                                   % (mcu_name.split()[-1], mcu_version))
             else:
-                msg_updated.append("%s: Current version %s"
+                msg_updated.append("%s: %s"
                                    % (mcu_name.split()[-1], mcu_version))
         if not msg_update:
             msg_update.append("<none>")
         if not msg_updated:
             msg_updated.append("<none>")
-        newmsg = ["MCU Protocol error",
+        newmsg = ["MCU warzone",
                   message_protocol_error1,
-                  "Your Klipper version is: %s" % (host_version,),
-                  "MCU(s) which should be updated:"]
-        newmsg += msg_update + ["Up-to-date MCU(s):"] + msg_updated
+                  "Current Klipper build: %s" % (host_version,),
+                  "To be updated:"]
+        newmsg += msg_update + ["Up-to-date:"] + msg_updated
         newmsg += [message_protocol_error2, details['error']]
         self.printer.update_error_msg(msg, "\n".join(newmsg))
     def _check_mcu_connect_error(self, msg, details):
