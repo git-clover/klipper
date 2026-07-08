@@ -1,4 +1,4 @@
-This directory contains external library code.
+# This directory contains external library code
 
 The cmsis directory contains code from:
   https://github.com/ARM-software/CMSIS_5
