@@ -16,7 +16,7 @@ class SerialReader:
         self.reactor = reactor
         self.warn_prefix = ""
         self.mcu_name = mcu_name
-        self.wait = 30
+        self.wait = 30 # Edit this for your flavor.
         if self.mcu_name:
             self.warn_prefix = "mcu '%s': " % (self.mcu_name)
         sq_name = ("serialq %s" % (self.mcu_name))[:15]
