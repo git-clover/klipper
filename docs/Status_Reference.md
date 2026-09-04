@@ -162,10 +162,10 @@ objects:
 - `rpm`: The measured fan speed in rotations per minute if the fan has
   a tachometer_pin defined.
 
-## filament_switch_sensor
+## standard_spdt
 
 The following information is available in
-[filament_switch_sensor some_name](Config_Reference.md#filament_switch_sensor)
+[standard_spdt some_name](Config_Reference.md#standard_spdt)
 objects:
 - `enabled`: Returns True if the switch sensor is currently enabled.
 - `filament_detected`: Returns True if the sensor is in a triggered
@@ -248,7 +248,7 @@ The following information is available in the
 [hall_filament_width_sensor](Config_Reference.md#hall_filament_width_sensor)
 object:
 - all items from
-  [filament_switch_sensor](Status_Reference.md#filament_switch_sensor)
+  [standard_spdt](Status_Reference.md#standard_spdt)
 - `is_active`: Returns True if the sensor is currently active.
 - `flow_compensation_enabled`: Returns True if flow compensation is enabled.
 - `Diameter`: Returns the last width reading in mm if the sensor is active or

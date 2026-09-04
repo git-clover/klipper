@@ -24,5 +24,13 @@ class PrinterHeaterBed:
         # Set Bed Temperature and Wait
         self.cmd_M140(gcmd, wait=True)
 
+
+# Prusa XL! 
+'''
+class MultiBedSupport:
+    def cmd_M555(self, x, y, wx, wy):
+'''     
+
+
 def load_config(config):
     return PrinterHeaterBed(config)

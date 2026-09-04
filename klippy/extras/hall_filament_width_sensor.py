@@ -3,7 +3,7 @@
 # Copyright (C) 2019  Mustafa YILDIZ <mydiz@hotmail.com>
 #
 # This file may be distributed under the terms of the GNU GPLv3 license.
-from . import filament_switch_sensor
+from . import standard_spdt
 
 ADC_REPORT_TIME = 0.500
 ADC_SAMPLE_TIME = 0.03
@@ -97,7 +97,7 @@ class HallFilamentWidthSensor:
             self.cmd_log_disable,
             desc=self.cmd_DISABLE_FILAMENT_WIDTH_LOG_help)
 
-        self.runout_helper = filament_switch_sensor.RunoutHelper(config)
+        self.runout_helper = standard_spdt.RunoutHelper(config)
         self.runout_helper.sensor_enabled = self.is_active
     # Initialization
     def handle_ready(self):

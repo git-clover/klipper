@@ -175,7 +175,7 @@ Available on 20191021. Major changes in this release:
 * Experimental support for polar and "cable winch" kinematics.
 * The config file can now include other config files.
 * Many additional modules added: board_pins, controller_fan,
-  delayed_gcode, dotstar, filament_switch_sensor, firmware_retraction,
+  delayed_gcode, dotstar, standard_spdt, firmware_retraction,
   gcode_arcs, gcode_button, heater_generic, manual_stepper, mcp4018,
   mcp4728, neopixel, pause_resume, respond, temperature_sensor
   tsl1401cl_filament_width_sensor, tuning_tower

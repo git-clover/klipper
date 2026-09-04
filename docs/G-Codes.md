@@ -521,21 +521,21 @@ parsed as Python literals). If TEMPLATE is an empty string then this
 command will clear any previous template assigned to the pin (one can
 then use `SET_FAN_SPEED` commands to manage the values directly).
 
-### [filament_switch_sensor]
+### [standard_spdt]
 
 The following command is available when a
-[filament_switch_sensor](Config_Reference.md#filament_switch_sensor)
+[standard_spdt](Config_Reference.md#standard_spdt)
 or
 [filament_motion_sensor](Config_Reference.md#filament_motion_sensor)
 config section is enabled.
 
-#### QUERY_FILAMENT_SENSOR
-`QUERY_FILAMENT_SENSOR SENSOR=<sensor_name>`: Queries the current
+#### QUERY_SPDT
+`QUERY_SPDT SENSOR=<sensor_name>`: Queries the current
 status of the filament sensor. The data displayed on the terminal will
 depend on the sensor type defined in the configuration.
 
-#### SET_FILAMENT_SENSOR
-`SET_FILAMENT_SENSOR SENSOR=<sensor_name> ENABLE=[0|1]`: Sets the
+#### SET_SPDT
+`SET_SPDT SENSOR=<sensor_name> ENABLE=[0|1]`: Sets the
 filament sensor on/off. If ENABLE is set to 0, the filament sensor
 will be disabled, if set to 1 it is enabled.
 

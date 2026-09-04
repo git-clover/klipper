@@ -1,4 +1,4 @@
-# Generic Filament Sensor Module
+# Generic SPDT Module
 #
 # Copyright (C) 2019  Eric Callahan <arksine.code@gmail.com>
 #
@@ -13,17 +13,17 @@ class RunoutHelper:
         self.reactor = self.printer.get_reactor()
         self.gcode = self.printer.lookup_object('gcode')
         # Read config
-        self.runout_pause = config.getboolean('pause_on_runout', True)
+        self.runout_pause = config.getboolean('pause_if_disengaged', True)
         if self.runout_pause:
             self.printer.load_object(config, 'pause_resume')
-        self.runout_gcode = self.insert_gcode = None
+        self.disengage_gcode = self.engage_gcode = None
         gcode_macro = self.printer.load_object(config, 'gcode_macro')
-        if self.runout_pause or config.get('runout_gcode', None) is not None:
-            self.runout_gcode = gcode_macro.load_template(
-                config, 'runout_gcode', '')
-        if config.get('insert_gcode', None) is not None:
-            self.insert_gcode = gcode_macro.load_template(
-                config, 'insert_gcode')
+        if self.runout_pause or config.get('disengage_gcode', None) is not None:
+            self.disengage_gcode = gcode_macro.load_template(
+                config, 'disengage_gcode', '')
+        if config.get('engage_gcode', None) is not None:
+            self.engage_gcode = gcode_macro.load_template(
+                config, 'engage_gcode')
         self.pause_delay = config.getfloat('pause_delay', .5, above=.0)
         self.event_delay = config.getfloat('event_delay', 3., minval=.0)
         # Internal state
@@ -33,13 +33,13 @@ class RunoutHelper:
         # Register commands and event handlers
         self.printer.register_event_handler("klippy:ready", self._handle_ready)
         self.gcode.register_mux_command(
-            "QUERY_FILAMENT_SENSOR", "SENSOR", self.name,
-            self.cmd_QUERY_FILAMENT_SENSOR,
-            desc=self.cmd_QUERY_FILAMENT_SENSOR_help)
+            "QUERY_SPDT", "SENSOR", self.name,
+            self.cmd_QUERY_SPDT,
+            desc=self.cmd_QUERY_SPDT_help)
         self.gcode.register_mux_command(
-            "SET_FILAMENT_SENSOR", "SENSOR", self.name,
-            self.cmd_SET_FILAMENT_SENSOR,
-            desc=self.cmd_SET_FILAMENT_SENSOR_help)
+            "SET_SPDT", "SENSOR", self.name,
+            self.cmd_SET_SPDT,
+            desc=self.cmd_SET_SPDT_help)
     def _handle_ready(self):
         self.min_event_systime = self.reactor.monotonic() + 2.
     def _runout_event_handler(self, eventtime):
@@ -51,9 +51,9 @@ class RunoutHelper:
             pause_resume.send_pause_command()
             pause_prefix = "PAUSE\n"
             self.printer.get_reactor().pause(eventtime + self.pause_delay)
-        self._exec_gcode(pause_prefix, self.runout_gcode)
+        self._exec_gcode(pause_prefix, self.disengage_gcode)
     def _insert_event_handler(self, eventtime):
-        self._exec_gcode("", self.insert_gcode)
+        self._exec_gcode("", self.engage_gcode)
     def _exec_gcode(self, prefix, template):
         try:
             self.gcode.run_script(prefix + template.render() + "\nM400")
@@ -76,33 +76,33 @@ class RunoutHelper:
         is_printing = idle_timeout.get_status(now)["state"] == "Printing"
         # Perform filament action associated with status change (if any)
         if is_filament_present:
-            if not is_printing and self.insert_gcode is not None:
+            if not is_printing and self.engage_gcode is not None:
                 # insert detected
                 self.min_event_systime = self.reactor.NEVER
                 logging.info(
-                    "Filament Sensor %s: insert event detected, Time %.2f" %
+                    "SPDT %s: engaged @Time %.2f" %
                     (self.name, now))
                 self.reactor.register_callback(self._insert_event_handler)
-        elif is_printing and self.runout_gcode is not None:
+        elif is_printing and self.disengage_gcode is not None:
             # runout detected
             self.min_event_systime = self.reactor.NEVER
             logging.info(
-                "Filament Sensor %s: runout event detected, Time %.2f" %
+                "SPDT %s: disengaged @Time %.2f" %
                 (self.name, now))
             self.reactor.register_callback(self._runout_event_handler)
     def get_status(self, eventtime):
         return {
             "filament_detected": bool(self.filament_present),
             "enabled": bool(self.sensor_enabled)}
-    cmd_QUERY_FILAMENT_SENSOR_help = "Query the status of the Filament Sensor"
-    def cmd_QUERY_FILAMENT_SENSOR(self, gcmd):
+    cmd_QUERY_SPDT_help = "Query an SPDT"
+    def cmd_QUERY_SPDT(self, gcmd):
         if self.filament_present:
-            msg = "Filament Sensor %s: filament detected" % (self.name)
+            msg = "SPDT %s: Engaged" % (self.name)
         else:
-            msg = "Filament Sensor %s: filament not detected" % (self.name)
+            msg = "SPDT %s: Disengaged" % (self.name)
         gcmd.respond_info(msg)
-    cmd_SET_FILAMENT_SENSOR_help = "Sets the filament sensor on/off"
-    def cmd_SET_FILAMENT_SENSOR(self, gcmd):
+    cmd_SET_SPDT_help = "Use SPDT?"
+    def cmd_SET_SPDT(self, gcmd):
         self.sensor_enabled = gcmd.get_int("ENABLE", 1)
 
 class SwitchSensor:

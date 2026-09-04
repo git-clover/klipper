@@ -5001,27 +5001,27 @@ information on menu attributes available during template rendering.
 
 ## Filament sensors
 
-### [filament_switch_sensor]
+### [standard_spdt]
 
 Filament Switch Sensor. Support for filament insert and runout
 detection using a switch sensor, such as an endstop switch.
 
-See the [command reference](G-Codes.md#filament_switch_sensor) for
+See the [command reference](G-Codes.md#standard_spdt) for
 more information.
 
 ```
-[filament_switch_sensor my_sensor]
-#pause_on_runout: True
+[standard_spdt my_sensor]
+#pause_if_disengaged: True
 #   When set to True, a PAUSE will execute immediately after a runout
-#   is detected. Note that if pause_on_runout is False and the
-#   runout_gcode is omitted then runout detection is disabled. Default
+#   is detected. Note that if pause_if_disengaged is False and the
+#   disengage_gcode is omitted then runout detection is disabled. Default
 #   is True.
-#runout_gcode:
+#disengage_gcode:
 #   A list of G-Code commands to execute after a filament runout is
 #   detected. See docs/Command_Templates.md for G-Code format. If
-#   pause_on_runout is set to True this G-Code will run after the
+#   pause_if_disengaged is set to True this G-Code will run after the
 #   PAUSE is complete. The default is not to run any G-Code commands.
-#insert_gcode:
+#engage_gcode:
 #   A list of G-Code commands to execute after a filament insert is
 #   detected. See docs/Command_Templates.md for G-Code format. The
 #   default is not to run any G-Code commands, which disables insert
@@ -5032,7 +5032,7 @@ more information.
 #   ignored. The default is 3 seconds.
 #pause_delay: 0.5
 #   The amount of time to delay, in seconds, between the pause command
-#   dispatch and execution of the runout_gcode. It may be useful to
+#   dispatch and execution of the disengage_gcode. It may be useful to
 #   increase this delay if OctoPrint exhibits strange pause behavior.
 #   Default is 0.5 seconds.
 #debounce_delay:
@@ -5051,7 +5051,7 @@ Filament Motion Sensor. Support for filament insert and runout
 detection using an encoder that toggles the output pin during filament
 movement through the sensor.
 
-See the [command reference](G-Codes.md#filament_switch_sensor) for
+See the [command reference](G-Codes.md#standard_spdt) for
 more information.
 
 ```
@@ -5064,12 +5064,12 @@ extruder:
 #   The name of the extruder or extruder_stepper section this sensor
 #   is associated with. This parameter must be provided.
 switch_pin:
-#pause_on_runout:
-#runout_gcode:
-#insert_gcode:
+#pause_if_disengaged:
+#disengage_gcode:
+#engage_gcode:
 #event_delay:
 #pause_delay:
-#   See the "filament_switch_sensor" section for a description of the
+#   See the "standard_spdt" section for a description of the
 #   above parameters.
 ```
 
@@ -5136,19 +5136,19 @@ adc2:
 #   Out diameter to terminal and klipper.log can be turn on|of by
 #   command.
 #min_diameter: 1.0
-#   Minimal diameter for trigger virtual filament_switch_sensor.
+#   Minimal diameter for trigger virtual standard_spdt.
 #max_diameter:
-#   Maximum diameter for triggering virtual filament_switch_sensor.
+#   Maximum diameter for triggering virtual standard_spdt.
 #   The default is default_nominal_filament_diameter + max_difference.
 #use_current_dia_while_delay: False
 #   Use the current diameter instead of the nominal diameter while
 #   the measurement delay has not run through.
-#pause_on_runout:
-#runout_gcode:
-#insert_gcode:
+#pause_if_disengaged:
+#disengage_gcode:
+#engage_gcode:
 #event_delay:
 #pause_delay:
-#   See the "filament_switch_sensor" section for a description of the
+#   See the "standard_spdt" section for a description of the
 #   above parameters.
 ```
 
