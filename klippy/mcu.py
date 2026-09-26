@@ -903,7 +903,7 @@ class MCUConnectHelper:
         self._is_timeout = True
         logging.info("Timeout with MCU '%s' (eventtime=%f)",
                      self._name, eventtime)
-        self._printer.invoke_shutdown("Lost communication with MCU '%s'" % (
+        self._printer.invoke_shutdown("MCU '%s' had itself K.O.'d" % (
             self._name,))
     def is_shutdown(self):
         return self._is_shutdown
@@ -1062,7 +1062,7 @@ class MCUConfigHelper:
             # Already configured - may need to only send init commands
             start_reason = self._printer.get_start_args().get("start_reason")
             if start_reason == 'firmware_restart':
-                raise error("Failed automated reset of MCU '%s'"
+                raise error("MCU '%s' requires manual reset!"
                             % (self._name,))
             self._finalize_config()
             if self._config_crc != config_params['crc']:
