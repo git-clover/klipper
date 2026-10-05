@@ -84,7 +84,7 @@ class ProbeCommandHelper:
     cmd_PROBE_help = "Probe Z-height at current XY position"
     def cmd_PROBE(self, gcmd):
         pos = run_single_probe(self.probe, gcmd)
-        gcmd.respond_info("Result: at %.3f,%.3f estimate contact at z=%.6f"
+        gcmd.respond_info("[%.3f, %.3f] Final: %.6f mm"
                           % (pos.bed_x, pos.bed_y, pos.bed_z))
         gcode = self.printer.lookup_object('gcode')
         self.last_probe_position = gcode.Coord((pos.bed_x, pos.bed_y,
@@ -368,7 +368,7 @@ class SampleAveragingHelper:
         # Report results
         if gcmd.get_command() != "G28":
             gcode = self.printer.lookup_object('gcode')
-            gcode.respond_info("probe: at %.3f,%.3f bed will contact at z=%.6f"
+            gcode.respond_info("[%.3f, %.3f] Probed: %.6f mm"
                                % (epos.bed_x, epos.bed_y, epos.bed_z))
         return epos
     def run_probe(self, gcmd):
