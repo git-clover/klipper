@@ -64,7 +64,7 @@ class VibrationPulseTestGenerator:
         self.accel_per_hz = config.getfloat('accel_per_hz', 60., above=0.)
         self.accel_per_hz_z = config.getfloat('accel_per_hz_z', 15., above=0.)
         self.hz_per_sec = config.getfloat('hz_per_sec', 1.,
-                                          minval=0.1, maxval=2.)
+                                          minval=0.1, maxval=5.)
     def prepare_test(self, gcmd, is_z):
         self.freq_start = gcmd.get_float("FREQ_START", self.min_freq, minval=1.)
         self.freq_end = gcmd.get_float("FREQ_END", (self.max_freq_z if is_z
@@ -236,7 +236,7 @@ class ResonanceTestExecutor:
             else:
                 toolhead.move([nX, nY, nZ] + tpos[3:], max(abs_v, abs_last_v))
             if math.floor(freq) > math.floor(last_freq):
-                gcmd.respond_info("Testing frequency %.0f Hz" % (freq,))
+                gcmd.respond_info("[Freq.] %.0f Hz" % (freq,))
                 reactor.pause(reactor.monotonic() + 0.01)
             X, Y, Z = nX, nY, nZ
             last_t = next_t
@@ -329,7 +329,7 @@ class ResonanceTester:
                 toolhead.wait_moves()
                 toolhead.dwell(0.500)
                 if len(axes) > 1:
-                    gcmd.respond_info("Testing axis %s" % axis.get_name())
+                    gcmd.respond_info("Axis: %s" % axis.get_name())
 
                 raw_values = []
                 if accel_chips is None:
