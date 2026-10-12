@@ -367,7 +367,7 @@ class BedMeshCalibrate:
         zero_ref_pos = self.probe_mgr.get_zero_ref_pos()
         if zero_ref_pos is not None:
             print_func(
-                "bed_mesh: zero_reference_position is (%.2f, %.2f)"
+                "[Zero ref.] (%.2f, %.2f)"
                 % (zero_ref_pos[0], zero_ref_pos[1])
             )
         substitutes = self.probe_mgr.get_substitutes()
@@ -499,15 +499,15 @@ class BedMeshCalibrate:
                  (self.orig_config["mesh_max"][1] -
                   self.orig_config["mesh_min"][1]))
 
-        gcmd.respond_info("Original mesh bounds: (%s,%s)" %
+        gcmd.respond_info("[Bound] (%s,%s)" %
                           (self.orig_config["mesh_min"],
                            self.orig_config["mesh_max"]))
-        gcmd.respond_info("Original probe count: (%s,%s)" %
+        gcmd.respond_info("[Probes] %s x %s" %
                           (self.mesh_config["x_count"],
                            self.mesh_config["y_count"]))
-        gcmd.respond_info("Adapted mesh bounds: (%s,%s)" %
+        gcmd.respond_info("[Adpt. Bound] (%s,%s)" %
                           (adjusted_mesh_min, adjusted_mesh_max))
-        gcmd.respond_info("Ratio: (%s, %s)" % ratio)
+        gcmd.respond_info("[Adpt. Ratio] %s : %s" % ratio)
 
         new_x_probe_count = int(
             math.ceil(self.mesh_config["x_count"] * ratio[0]))
@@ -524,7 +524,7 @@ class BedMeshCalibrate:
         new_x_probe_count = max(min_num_of_probes, new_x_probe_count)
         new_y_probe_count = max(min_num_of_probes, new_y_probe_count)
 
-        gcmd.respond_info("Adapted probe count: (%s,%s)" %
+        gcmd.respond_info("[Adpt. Probes] %s x %s" %
                           (new_x_probe_count, new_y_probe_count))
 
         # If the adapted mesh size is too small, adjust it to something
@@ -640,7 +640,7 @@ class BedMeshCalibrate:
             "probe_path": self.probe_mgr.get_std_path(),
             "rapid_path": list(self.probe_mgr.iter_rapid_path())
         }
-    cmd_BED_MESH_CALIBRATE_help = "Perform Mesh Bed Leveling"
+    cmd_BED_MESH_CALIBRATE_help = "Start bed leveling"
     def cmd_BED_MESH_CALIBRATE(self, gcmd):
         self._profile_name = gcmd.get('PROFILE', "default")
         if not self._profile_name.strip():
@@ -783,7 +783,7 @@ class BedMeshCalibrate:
             zero_ref_pos = self.probe_mgr.get_zero_ref_pos()
             z_mesh.set_zero_reference(*zero_ref_pos)
         self.bedmesh.set_mesh(z_mesh)
-        self.gcode.respond_info("Mesh Bed Leveling Complete")
+        self.gcode.respond_info("Leveling done!")
         if self._profile_name is not None:
             self.bedmesh.save_profile(self._profile_name)
     def _dump_points(self, probed_pts, corrected_pts):
@@ -1641,8 +1641,12 @@ class ProfileManager:
             version = profile.getint('version', 0)
             if version != PROFILE_VERSION:
                 logging.info(
-                    "bed_mesh: Profile [%s] not compatible with this version\n"
-                    "of bed_mesh.  Profile Version: %d Current Version: %d "
+                    "[%s] Profiles from version %d are\n"
+                    "no longer compatible with the\n"
+                    "current version %d. \n"
+                    "Re-level your bed to update the\n"
+                    "profile and run SAVE_CONFIG\n"
+                    "to dissolve this issue."
                     % (name, version, PROFILE_VERSION))
                 self.incompatible_profiles.append(name)
                 continue
@@ -1670,16 +1674,19 @@ class ProfileManager:
             for profile in self.incompatible_profiles:
                 configfile.remove_section('bed_mesh ' + profile)
             self.gcode.respond_info(
-                "The following incompatible profiles have been detected\n"
-                "and are scheduled for removal:\n%s\n"
-                "The SAVE_CONFIG command will update the printer config\n"
-                "file and restart the printer" %
+                "[%s] This profile lost compatibility\n"
+                "and is scheduled to be removed.\n"
+                "Re-level your bed and run SAVE_CONFIG\n"
+                "to keep using this profile." %
                 (('\n').join(self.incompatible_profiles)))
+            self.gcode.respond_info(
+                "Good luck and happy printing!"
+            )
     def save_profile(self, prof_name):
         z_mesh = self.bedmesh.get_mesh()
         if z_mesh is None:
             self.gcode.respond_info(
-                "Unable to save to profile [%s], the bed has not been probed"
+                "[%s] No probe data!"
                 % (prof_name))
             return
         probed_matrix = z_mesh.get_probed_matrix()
@@ -1706,9 +1713,8 @@ class ProfileManager:
         self.profiles = profiles
         self.bedmesh.update_status()
         self.gcode.respond_info(
-            "Bed Mesh state has been saved to profile [%s]\n"
-            "for the current session.  The SAVE_CONFIG command will\n"
-            "update the printer config file and restart the printer."
+            "[%s] Profile saved!\n"
+            "Run SAVE_CONFIG to load your new mesh."
             % (prof_name))
     def load_profile(self, prof_name):
         profile = self.profiles.get(prof_name, None)
