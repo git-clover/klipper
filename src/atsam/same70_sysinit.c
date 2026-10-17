@@ -84,7 +84,7 @@ SystemInit( void )
         ;
     if ((EFC->EEFC_FRR & GPNVM_TCM_MASK) != GPNVM_TCM_MASK)
     {
-        /* Configure TCM sizes to 128KiB (set GPNVM7 and GPNVM8). */
+        /* Configure TCM sizes to 128 KiB (set GPNVM7 and GPNVM8). */
         EFC->EEFC_FCR = (EEFC_FCR_FKEY_PASSWD | EEFC_FCR_FCMD_SGPB
                         | EEFC_FCR_FARG(7));
         while ((EFC->EEFC_FSR & EEFC_FSR_FRDY) == 0)

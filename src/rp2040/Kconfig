@@ -83,7 +83,7 @@ choice
         depends on MACH_RP2040
         select RP2040_HAVE_STAGE2
     config RPXXXX_FLASH_START_4000
-        bool "16KiB bootloader"
+        bool "16 KiB bootloader"
         select RPXXXX_HAVE_BOOTLOADER
 endchoice
 config FLASH_APPLICATION_ADDRESS

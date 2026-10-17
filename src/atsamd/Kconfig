@@ -144,9 +144,9 @@ choice
     prompt "Bootloader offset"
     config SAMD_FLASH_START_2000
         depends on MACH_SAMD21
-        bool "8KiB bootloader"
+        bool "8 KiB bootloader"
     config SAMD_FLASH_START_4000
-        bool "16KiB bootloader"
+        bool "16 KiB bootloader"
     config SAMD_FLASH_START_0000
         bool "No bootloader"
 endchoice

@@ -251,16 +251,16 @@ program samd21_sam_ba.bin verify
 ```
 
 The most common bootloader on the SAMD21 is the one found on the
-"Arduino Zero". It uses an 8KiB bootloader (the application must be
-compiled with a start address of 8KiB). One can enter this bootloader
+"Arduino Zero". It uses an 8 KiB bootloader (the application must be
+compiled with a start address of 8 KiB). One can enter this bootloader
 by double clicking the reset button. To flash an application use
 something like:
 ```
 bossac -U -p /dev/ttyACM0 --offset=0x2000 -w out/klipper.bin -v -b -R
 ```
 
-In contrast, the "Arduino M0" uses a 16KiB bootloader (the application
-must be compiled with a start address of 16KiB). To flash an
+In contrast, the "Arduino M0" uses a 16 KiB bootloader (the application
+must be compiled with a start address of 16 KiB). To flash an
 application on this bootloader, reset the micro-controller and run the
 flash command within the first few seconds of boot - something like:
 ```
@@ -288,8 +288,8 @@ program bootloader-itsybitsy_m4-v3.7.0.bin verify
 at91samd bootloader 16384
 ```
 
-The SAMD51 uses a 16KiB bootloader (the application must be compiled
-with a start address of 16KiB). To flash an application use something
+The SAMD51 uses a 16 KiB bootloader (the application must be compiled
+with a start address of 16 KiB). To flash an application use something
 like:
 ```
 bossac -U -p /dev/ttyACM0 --offset=0x4000 -w out/klipper.bin -v -b -R
@@ -328,8 +328,8 @@ wget 'https://github.com/rogerclarkmelbourne/STM32duino-bootloader/raw/master/bi
 stm32flash -w generic_boot20_pc13.bin -v -g 0 /dev/ttyAMA0
 ```
 
-This bootloader uses 8KiB of flash space (the application must be
-compiled with a start address of 8KiB). Flash an application with
+This bootloader uses 8 KiB of flash space (the application must be
+compiled with a start address of 8 KiB). Flash an application with
 something like:
 ```
 dfu-util -d 1eaf:0003 -a 2 -R -D out/klipper.bin
@@ -399,8 +399,8 @@ NOTES:
   After which you can release the reset button.
 
 
-This bootloader requires 2KiB of flash space (the application
-must be compiled with a start address of 2KiB).
+This bootloader requires 2 KiB of flash space (the application
+must be compiled with a start address of 2 KiB).
 
 The hid-flash program is used to upload a binary to the bootloader. You
 can install this software with the following commands:
@@ -445,7 +445,7 @@ with something like:
  dfu-util -d 0483:df11 -a 0 -R -D  MSCboot-STM32F072.bin -s0x08000000:leave
 ```
 
-This bootloader uses 8KiB or 16KiB of flash space, see description of the bootloader
+This bootloader uses 8 KiB or 16 KiB of flash space, see description of the bootloader
 (the application must be compiled with with the corresponding starting address).
 
 The bootloader can be activated by pressing the reset button of the board twice.
@@ -513,7 +513,7 @@ stm32flash -w hid_bootloader_SKR_PRO.bin -v -g 0 /dev/ttyAMA0
 ```
 
 This bootloader requires 16Kib of flash space on the STM32F4 (the application
-must be compiled with a start address of 16KiB).
+must be compiled with a start address of 16 KiB).
 
 As with the STM32F1, the STM32F4 uses the hid-flash tool to upload binaries to
 the MCU. See the instructions above for details on how to build and use
@@ -534,7 +534,7 @@ for further information on that topic.
 It is common for Smoothieboards to come with a bootloader from:
 [https://github.com/triffid/LPC17xx-DFU-Bootloader](https://github.com/triffid/LPC17xx-DFU-Bootloader).
 When using this bootloader the application must be compiled with a
-start address of 16KiB. The easiest way to flash an application with
+start address of 16 KiB. The easiest way to flash an application with
 this bootloader is to copy the application file (eg,
 `out/klipper.bin`) to a file named `firmware.bin` on an SD card, and
 then to reboot the micro-controller with that SD card.
